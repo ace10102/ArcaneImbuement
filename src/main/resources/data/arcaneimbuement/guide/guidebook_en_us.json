@@ -1,0 +1,23 @@
+{
+	"Totem": {
+		"index": 0,
+		"category": "manaweaving",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "Spell Totem"
+			},
+			{
+				"type": "text",
+				"value": "This totem casts spells"
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "manaweaving_altar",
+				"location": "arcaneimbuement:manaweaving/manaweaving_totem"
+			}
+		]
+	}
+}
