@@ -19,5 +19,38 @@
 				"location": "arcaneimbuement:manaweaving/manaweaving_totem"
 			}
 		]
+	},
+	"Armor": {
+		"index": 0,
+		"category": "manaweaving",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "Spell armor"
+			},
+			{
+				"type": "text",
+				"value": "This armor casts spells"
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "manaweaving_altar",
+				"location": "arcaneimbuement:manaweaving/manaweaving_helmet"
+			},
+			{
+				"type": "manaweaving_altar",
+				"location": "arcaneimbuement:manaweaving/manaweaving_chest"
+			},
+			{
+				"type": "manaweaving_altar",
+				"location": "arcaneimbuement:manaweaving/manaweaving_legs"
+			},
+			{
+				"type": "manaweaving_altar",
+				"location": "arcaneimbuement:manaweaving/manaweaving_boots"
+			}
+		]
 	}
 }
