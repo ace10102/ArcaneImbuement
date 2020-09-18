@@ -12,6 +12,8 @@ import com.ma.spells.crafting.SpellRecipe;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -20,30 +22,46 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArcaneImbuement.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TooltipHandler {
 	
-	@SubscribeEvent
-	public static void ItemTooltipEvent(net.minecraftforge.event.entity.player.ItemTooltipEvent event) {
+	@SubscribeEvent @OnlyIn(value=Dist.CLIENT)
+	public static void ItemTooltipEvent(ItemTooltipEvent event) {
 		
 		ItemStack hoveredItem = event.getItemStack();
 		
 		if(SpellRecipe.stackContainsSpell(hoveredItem) && !(hoveredItem.getItem() instanceof ItemSpellRecipe)) {
 			
+			addArmorInformation(hoveredItem, event.getToolTip());
 			SpellRecipe recipe = SpellRecipe.fromNBT(hoveredItem.getOrCreateChildTag("spell"));
-			addInformation(hoveredItem, event.getToolTip(), recipe);
+			addSpellInformation(hoveredItem, event.getToolTip(), recipe);
 			
 		}
 	}
+	public static void addArmorInformation(ItemStack stack, List<ITextComponent> tooltip) {
+		if (stack.getItem() instanceof ArmorItem) {
+			ArmorItem hoveredItem = (ArmorItem)stack.getItem();
+		
+			if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.HEAD) {
+				tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on ").func_240699_a_(TextFormatting.AQUA));
+			}
+			if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.CHEST) {
+				tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Hit").func_240699_a_(TextFormatting.AQUA));
+			}
+			if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.LEGS) {
+				tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Jump").func_240699_a_(TextFormatting.AQUA));
+			}
+			if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.FEET) {
+				tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Fall").func_240699_a_(TextFormatting.AQUA));
+			}
+		}
+	}
 	
-	@OnlyIn(value=Dist.CLIENT)
-    public static void addInformation(ItemStack stack, List<ITextComponent> tooltip, SpellRecipe recipe) {
+    public static void addSpellInformation(ItemStack stack, List<ITextComponent> tooltip, SpellRecipe recipe) {
 		Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) {
-            return;
-        }
         if (recipe.isValid() && !recipe.isMysterious()) {
             SpellCaster.applyAdjusters(stack, (PlayerEntity)mc.player, recipe);
             IModifiedSpellPart shape = recipe.getShape();

@@ -1,0 +1,68 @@
+{
+	"type": "mana-and-artifice:ritual",
+	"tier": 1,
+	"pattern":
+	[
+		[ 0, 0,-1,-1, 6,-1,-1, 0, 0 ],
+		[ 0,13, 0, 0,-1, 0, 0, 7, 0 ],
+		[-1, 0, 0,-1, 0,-1, 0, 0,-1 ],
+		[-1, 0,-1, 0, 2, 0,-1, 0,-1 ],
+		[12,-1, 0, 5, 1, 3, 0,-1, 8 ],
+		[-1, 0,-1, 0, 4, 0,-1, 0,-1 ],
+		[-1, 0, 0,-1, 0,-1, 0, 0,-1 ],
+		[ 0,11, 0, 0,-1, 0, 0, 9, 0 ],
+		[ 0, 0,-1,-1,10,-1,-1, 0, 0 ]
+	],
+	"displayPattern":
+	[
+		[ 0, 0,-1,-1, 1,-1,-1, 0, 0 ],
+		[ 0, 8, 0, 0,-1, 0, 0, 2, 0 ],
+		[-1, 0, 0,-1, 0,-1, 0, 0,-1 ],
+		[-1, 0,-1, 0,10, 0,-1, 0,-1 ],
+		[ 7,-1, 0,13,-1,11, 0,-1, 3 ],
+		[-1, 0,-1, 0,12, 0,-1, 0,-1 ],
+		[-1, 0, 0,-1, 0,-1, 0, 0,-1 ],
+		[ 0, 6, 0, 0,-1, 0, 0, 4, 0 ],
+		[ 0, 0,-1,-1, 5,-1,-1, 0, 0 ]
+	],
+	"reagents":
+	[
+		"    B    ",
+		" B     B ",
+		"         ",
+		"    B    ",
+		"B  BAB  B",
+		"    B    ",
+		"         ",
+		" B     B ",
+		"    B    "
+	],
+	"keys":
+	{
+		"A":
+		{
+			"item": "minecraft:diamond_chestplate",
+			"optional": false,
+			"consume": true
+		},
+		"B":
+		{
+			"item": "minecraft:diamond",
+			"optional": false,
+			"consume": true
+		}
+	},
+	"manaweave":
+	[
+		"mana-and-artifice:manaweave_patterns/circle",
+		"mana-and-artifice:manaweave_patterns/split_triangle"
+	],
+	"parameters":
+	{
+		"innerColor": "0x00FFCC",
+		"outerColor": "0x00FF8A",
+		"displayIndexes": false,
+		"kittable": false,
+		"beamColor": "0x16ba99"
+	}
+}
