@@ -2,6 +2,7 @@ package com.Spoilers.arcaneimbuement;
 
 import java.util.List;
 
+import com.Spoilers.arcaneimbuement.util.KeyboardUtil;
 import com.ma.api.spells.Component;
 import com.ma.api.spells.Shape;
 import com.ma.api.spells.attributes.AttributeValuePair;
@@ -33,34 +34,48 @@ public class TooltipHandler {
 		
 		ItemStack hoveredItem = event.getItemStack();
 		
+		if(Augmentation.isAugmented(hoveredItem)) {
+			
+			addImbuementInformation(hoveredItem, event.getToolTip());
+		}
 		if(SpellRecipe.stackContainsSpell(hoveredItem) && !(hoveredItem.getItem() instanceof ItemSpellRecipe)) {
 			
+			addSpellInformation(hoveredItem, event.getToolTip());
 			addArmorInformation(hoveredItem, event.getToolTip());
-			SpellRecipe recipe = SpellRecipe.fromNBT(hoveredItem.getOrCreateChildTag("spell"));
-			addSpellInformation(hoveredItem, event.getToolTip(), recipe);
 			
 		}
+	}
+	public static void addImbuementInformation(ItemStack stack, List<ITextComponent> tooltip) {
+		Augmentation augment = Augmentation.fromNBT(stack.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG));
+		short exp = augment.getExperience();
+		byte level = augment.getLevel();
+		tooltip.add((ITextComponent)new TranslationTextComponent("Augmented").func_240699_a_(TextFormatting.DARK_AQUA));
+		tooltip.add((ITextComponent)new TranslationTextComponent("Exp: " + exp).func_240699_a_(TextFormatting.DARK_AQUA));
+		tooltip.add((ITextComponent)new TranslationTextComponent("Level: " + level).func_240699_a_(TextFormatting.DARK_AQUA));
 	}
 	public static void addArmorInformation(ItemStack stack, List<ITextComponent> tooltip) {
 		if (stack.getItem() instanceof ArmorItem) {
 			ArmorItem hoveredItem = (ArmorItem)stack.getItem();
-		
-			if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.HEAD) {
-				tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on ").func_240699_a_(TextFormatting.AQUA));
-			}
-			if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.CHEST) {
-				tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Hit").func_240699_a_(TextFormatting.AQUA));
-			}
-			if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.LEGS) {
-				tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Jump").func_240699_a_(TextFormatting.AQUA));
-			}
-			if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.FEET) {
-				tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Fall").func_240699_a_(TextFormatting.AQUA));
-			}
+			
+			if(KeyboardUtil.isShift()) {
+				if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.HEAD) {
+					tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on ").func_240699_a_(TextFormatting.GOLD));
+				}
+				if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.CHEST) {
+					tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Hit").func_240699_a_(TextFormatting.GOLD));
+				}
+				if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.LEGS) {
+					tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Jump").func_240699_a_(TextFormatting.GOLD));
+				}
+				if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.FEET) {
+					tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Fall").func_240699_a_(TextFormatting.GOLD));
+				}
+			}	
 		}
 	}
 	
-    public static void addSpellInformation(ItemStack stack, List<ITextComponent> tooltip, SpellRecipe recipe) {
+    public static void addSpellInformation(ItemStack stack, List<ITextComponent> tooltip) {
+    	SpellRecipe recipe = SpellRecipe.fromNBT(stack.getOrCreateChildTag("spell"));
 		Minecraft mc = Minecraft.getInstance();
         if (recipe.isValid() && !recipe.isMysterious()) {
             SpellCaster.applyAdjusters(stack, (PlayerEntity)mc.player, recipe);
@@ -68,29 +83,34 @@ public class TooltipHandler {
             IModifiedSpellPart component = recipe.getComponent();
             TranslationTextComponent shapeText = new TranslationTextComponent(((Shape)recipe.getShape().getPart()).getRegistryName().toString());
             TranslationTextComponent componentText = new TranslationTextComponent(((Component)recipe.getComponent().getPart()).getRegistryName().toString());
-            if (shape!= null && component != null) {
+            if (shape != null && component != null) {
             	tooltip.add((ITextComponent)new TranslationTextComponent("Spell: " + shapeText.getString() + " " + componentText.getString()).func_240699_a_(TextFormatting.AQUA));
             }
-            if (shape != null && hasAttributes(shape)) {
-                tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.shape_attributes").func_240699_a_(TextFormatting.GREEN));
-                for (AttributeValuePair attr : ((Shape)shape.getPart()).getModifiableAttributes()) {
-                    tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.attribute_display", new Object[]{attr.getAttribute().name(), Float.valueOf(shape.getValue(attr.getAttribute()))}).func_240701_a_(new TextFormatting[]{TextFormatting.GRAY, TextFormatting.ITALIC}));
+            if(!KeyboardUtil.isShift()) {
+            	tooltip.add((ITextComponent)new TranslationTextComponent("Shift for Spell details").func_240699_a_(TextFormatting.AQUA));
+            }
+            if(KeyboardUtil.isShift()) {
+            	if (shape != null && hasAttributes(shape)) {
+                    tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.shape_attributes").func_240699_a_(TextFormatting.GREEN));
+                    for (AttributeValuePair attr : ((Shape)shape.getPart()).getModifiableAttributes()) {
+                        tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.attribute_display", new Object[]{attr.getAttribute().name(), Float.valueOf(shape.getValue(attr.getAttribute()))}).func_240701_a_(new TextFormatting[]{TextFormatting.GRAY, TextFormatting.ITALIC}));
+                    }
+                    tooltip.add((ITextComponent)new StringTextComponent(" "));
                 }
-                tooltip.add((ITextComponent)new StringTextComponent(" "));
-            }
-            if (component != null && hasAttributes(component)) {
-                tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.component_attributes").func_240699_a_(TextFormatting.GREEN));
-                for (AttributeValuePair attr : ((Component)component.getPart()).getModifiableAttributes()) {
-                    tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.attribute_display", new Object[]{attr.getAttribute().name(), Float.valueOf(component.getValue(attr.getAttribute()))}).func_240701_a_(new TextFormatting[]{TextFormatting.GRAY, TextFormatting.ITALIC}));
+                if (component != null && hasAttributes(component)) {
+                    tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.component_attributes").func_240699_a_(TextFormatting.GREEN));
+                    for (AttributeValuePair attr : ((Component)component.getPart()).getModifiableAttributes()) {
+                        tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.attribute_display", new Object[]{attr.getAttribute().name(), Float.valueOf(component.getValue(attr.getAttribute()))}).func_240701_a_(new TextFormatting[]{TextFormatting.GRAY, TextFormatting.ITALIC}));
+                    }
+                    tooltip.add((ITextComponent)new StringTextComponent(" "));
                 }
-                tooltip.add((ITextComponent)new StringTextComponent(" "));
-            }
-            if (recipe.isChanneled()) {
-                tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.channeled_mana_cost_display", new Object[]{String.format("%.2f", Float.valueOf(recipe.getManaCost() * 20.0f))}).func_240699_a_(TextFormatting.GOLD));
-            } else {
-                tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.mana_cost_display", new Object[]{String.format("%.2f", Float.valueOf(recipe.getManaCost()))}).func_240699_a_(TextFormatting.GOLD));
-            }
-            tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.complexity_display", new Object[]{Float.valueOf(recipe.getComplexity())}).func_240699_a_(TextFormatting.GOLD));
+                if (recipe.isChanneled()) {
+                    tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.channeled_mana_cost_display", new Object[]{String.format("%.2f", Float.valueOf(recipe.getManaCost() * 20.0f))}).func_240699_a_(TextFormatting.GOLD));
+                } else {
+                    tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.mana_cost_display", new Object[]{String.format("%.2f", Float.valueOf(recipe.getManaCost()))}).func_240699_a_(TextFormatting.GOLD));
+                }
+                tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.complexity_display", new Object[]{Float.valueOf(recipe.getComplexity())}).func_240699_a_(TextFormatting.GOLD));
+            }  
         }
     }
 	

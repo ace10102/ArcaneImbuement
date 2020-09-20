@@ -1,8 +1,8 @@
 package com.Spoilers.arcaneimbuement;
 
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -83,6 +83,19 @@ public class SpellTriggerHandler {
 			
 			ImbuedSpellCaster.Cast(legs, entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
 			
+		}
+	}
+	@SubscribeEvent
+	public static void castOnBoots(LivingFallEvent event) {
+		LivingEntity entity = event.getEntityLiving();
+		ItemStack boots = entity.getItemStackFromSlot(EquipmentSlotType.FEET);
+		float fallDistance = event.getDistance();
+		if(fallDistance > 4) {
+			if(boots != null && SpellRecipe.stackContainsSpell(boots)) {
+				
+				ImbuedSpellCaster.Cast(boots, entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
+				
+			}
 		}
 	}
 }
