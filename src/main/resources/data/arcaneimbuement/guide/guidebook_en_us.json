@@ -53,6 +53,27 @@
 			}
 		]
 	},
+	"Armor Augmentation": {
+		"index": 0,
+		"category": "rituals",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "Augment Armor"
+			},
+			{
+				"type": "text",
+				"value": "this is a test"
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "ritual",
+				"location": "arcaneimbuement:rituals/augment_armor"
+			}
+		]
+	},
 	"Armor Imbuement": {
 		"index": 0,
 		"category": "rituals",
@@ -70,7 +91,7 @@
 		"related_recipes": [
 			{
 				"type": "ritual",
-				"location": "arcaneimbuement:rituals/augment_armor"
+				"location": "arcaneimbuement:rituals/imbue_armor"
 			}
 		]
 	}

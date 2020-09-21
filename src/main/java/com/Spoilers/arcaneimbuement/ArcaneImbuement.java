@@ -4,6 +4,8 @@ package com.Spoilers.arcaneimbuement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.Spoilers.arcaneimbuement.rituals.RitualEffectAugmentArmor;
+import com.Spoilers.arcaneimbuement.rituals.RitualEffectImbueArmor;
 import com.ma.api.rituals.RitualEffect;
 
 import net.minecraft.util.ResourceLocation;
@@ -34,7 +36,9 @@ public class ArcaneImbuement {
 		public static void onRegisterRituals(RegistryEvent.Register<RitualEffect> event) {
 			event.getRegistry().register(new RitualEffectAugmentArmor(new ResourceLocation(ArcaneImbuement.MOD_ID, "rituals/augment_armor"))
 					.setRegistryName(new ResourceLocation(ArcaneImbuement.MOD_ID, "ritual-effect-augment-armor")));
-			ArcaneImbuement.LOGGER.info("Arcane Imbuement ritual registered");
+			event.getRegistry().register(new RitualEffectImbueArmor(new ResourceLocation(ArcaneImbuement.MOD_ID, "rituals/imbue_armor"))
+					.setRegistryName(new ResourceLocation(ArcaneImbuement.MOD_ID, "ritual-effect-imbue-armor")));
+			ArcaneImbuement.LOGGER.info("Arcane Imbuement rituals registered");
 		}
 	}
 	

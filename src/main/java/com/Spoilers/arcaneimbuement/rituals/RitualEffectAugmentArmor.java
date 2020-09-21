@@ -1,5 +1,6 @@
-package com.Spoilers.arcaneimbuement;
+package com.Spoilers.arcaneimbuement.rituals;
 
+import com.Spoilers.arcaneimbuement.Augmentation;
 import com.ma.api.recipes.IRitualRecipe;
 import com.ma.api.rituals.RitualBlockPos;
 import com.ma.api.rituals.RitualEffect;
@@ -50,7 +51,7 @@ public class RitualEffectAugmentArmor extends RitualEffect {
     protected boolean modifyRitualReagentsAndPatterns(ItemStack conditionStack, NonNullList<ResourceLocation> patternIDs, NonNullList<RitualBlockPos> reagents) {
         if(!(conditionStack.getItem() instanceof ArmorItem)) {
         	return false;
-        }//minecraft:diamond_chestplate
+        }
         this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), reagents, getTargetArmor(conditionStack));
         this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-fabric"), reagents, getFabricReagents(conditionStack));
         this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-focus"), reagents, getFocusReagents(conditionStack));
@@ -61,13 +62,13 @@ public class RitualEffectAugmentArmor extends RitualEffect {
         if (reagents.size() == 0 || replacements.size() == 0) {
             return;
         }
-        int replaceIndex = 0;
         for (RitualBlockPos reagent : reagents) {
-            if (reagent.getReagent() == null || !reagent.getReagent().isDynamic() || reagent.getReagent().getResourceLocation().compareTo(key) != 0) continue;
-            reagent.getReagent().setResourceLocation((ResourceLocation)replacements.get(replaceIndex));
-            if (++replaceIndex < replacements.size()) continue;
-            return;
+        	if (reagent.getReagent() == null) continue;
+            if (reagent.getReagent().getResourceLocation().compareTo(key) == 0) {
+            	reagent.getReagent().setResourceLocation((ResourceLocation)replacements.get(0));
+            }
         }
+        return;
     }
     private NonNullList<ResourceLocation> getTargetArmor(ItemStack conditionStack) {
     	NonNullList<ResourceLocation> chosenItem = NonNullList.create();
@@ -82,14 +83,11 @@ public class RitualEffectAugmentArmor extends RitualEffect {
     	EquipmentSlotType type = EquipmentSlotType.CHEST;
     	if (material.getToughness() > 0 || material.getDamageReductionAmount(type) > 6) {
     		possibleItems.add(new ResourceLocation("mana-and-artifice", "runic_silk"));
-    		possibleItems.add(new ResourceLocation("mana-and-artifice", "runic_silk"));
     	}
     	else if (material.getDamageReductionAmount(type) >= 5 && material.getEnchantability() < 20 && !(material.getName().equals("turtle"))) {
     		possibleItems.add(new ResourceLocation("mana-and-artifice", "infused_silk"));
-    		possibleItems.add(new ResourceLocation("mana-and-artifice", "infused_silk"));
     	}
     	else if (material.getDamageReductionAmount(type) < 5 || material.getEnchantability() > 20 || material.getName().equals("turtle")) {
-    		possibleItems.add(new ResourceLocation("mana-and-artifice", "vellum"));
     		possibleItems.add(new ResourceLocation("mana-and-artifice", "vellum"));
     	}
     	return possibleItems;
@@ -103,14 +101,11 @@ public class RitualEffectAugmentArmor extends RitualEffect {
     	
     	if (material.getToughness() > 0 || material.getDamageReductionAmount(type) > 6) {
     		possibleItems.add(new ResourceLocation("mana-and-artifice", "ritual_focus_greater"));
-    		possibleItems.add(new ResourceLocation("mana-and-artifice", "ritual_focus_greater"));
     	}
     	else if (material.getDamageReductionAmount(type) >= 5 && material.getEnchantability() < 20 && !(material.getName().equals("turtle"))) {
     		possibleItems.add(new ResourceLocation("mana-and-artifice", "ritual_focus_lesser"));
-    		possibleItems.add(new ResourceLocation("mana-and-artifice", "ritual_focus_lesser"));
     	}
     	else if (material.getDamageReductionAmount(type) < 5 || material.getEnchantability() > 20 || material.getName().equals("turtle")) {
-    		possibleItems.add(new ResourceLocation("mana-and-artifice", "ritual_focus_minor"));
     		possibleItems.add(new ResourceLocation("mana-and-artifice", "ritual_focus_minor"));
     	}
     	return possibleItems;

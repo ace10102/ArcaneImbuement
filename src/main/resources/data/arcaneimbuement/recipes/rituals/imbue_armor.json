@@ -1,0 +1,90 @@
+{
+	"type": "mana-and-artifice:ritual",
+	"tier": 1,
+	"pattern":
+	[
+		[ 0,-1, 0, 0,-1, 0, 0,-1, 0 ],
+		[-1, 0,-1,15, 0,16,-1, 0,-1 ],
+		[ 0,-1, 5, 0, 1, 0, 2,-1, 0 ],
+		[ 0,-1, 0,14, 0,17, 0,-1, 0 ],
+		[-1, 6, 0, 7,18, 8, 0, 9,-1 ],
+		[ 0,-1, 0,13, 0,10, 0,-1, 0 ],
+		[ 0,-1, 4, 0, 0, 0, 3,-1, 0 ],
+		[-1, 0,-1,12, 0,11,-1, 0,-1 ],
+		[ 0,-1, 0, 0,-1, 0, 0,-1, 0 ]
+	],
+	"displayPattern":
+	[
+		[ 0,11, 0, 0, 3, 0, 0, 7, 0 ],
+		[10, 0,-1,26, 0,30,-1, 0, 8 ],
+		[ 0,-1,-1, 0, 1, 0,-1,-1, 0 ],
+		[ 0,-1, 0,18, 0,22, 0,-1, 0 ],
+		[ 6,25, 0,17,-1,21, 0,29,12 ],
+		[ 0,-1, 0,16, 0,20, 0,-1, 0 ],
+		[ 0,-1,-1, 0, 0, 0,-1,-1, 0 ],
+		[14, 0,-1,24, 0,28,-1, 0, 4 ],
+		[ 0,13, 0, 0, 9, 0, 0, 5, 0 ]
+	],
+	"reagents":
+	[
+		"         ",
+		"   B B   ",
+		"  C A C  ",
+		"   B B   ",
+		" D D D D ",
+		"   E E   ",
+		"  C   C  ",
+		"   E E   ",
+		"         "
+	],
+	"keys":
+	{
+		"A":
+		{
+			"item": "arcaneimbuement:dynamic-armor",
+			"optional": false,
+			"consume": true,
+			"is_dynamic": true,
+			"dynamic_source": true
+		},
+		"B":
+		{
+			"item": "arcaneimbuement:dynamic-reagent",
+			"optional": false,
+			"consume": true,
+			"is_dynamic": true
+		},
+		"C":
+		{
+			"item": "mana-and-artifice:chimerite_gem",
+			"optional": false,
+			"consume": true
+		},
+		"D":
+		{
+			"item": "arcaneimbuement:dynamic-focus",
+			"optional": false,
+			"consume": true,
+			"is_dynamic": true
+		},
+		"E":
+		{
+			"item": "mana-and-artifice:vinteum_dust",
+			"optional": false,
+			"consume": true
+		}
+	},
+	"manaweave":
+	[
+		"mana-and-artifice:manaweave_patterns/circle",
+		"mana-and-artifice:manaweave_patterns/split_triangle"
+	],
+	"parameters":
+	{
+		"innerColor": "0x00FFCC",
+		"outerColor": "0x00FF8A",
+		"displayIndexes": false,
+		"kittable": false,
+		"beamColor": "0x16ba99"
+	}
+}
