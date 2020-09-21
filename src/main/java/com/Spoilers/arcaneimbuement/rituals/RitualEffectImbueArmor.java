@@ -115,13 +115,21 @@ public class RitualEffectImbueArmor extends RitualEffect {
 	}
 
 	@Override
-	protected boolean modifyRitualReagentsAndPatterns(ItemStack conditionStack,
-			NonNullList<ResourceLocation> patternIDs, NonNullList<RitualBlockPos> reagents) {
+	protected boolean modifyRitualReagentsAndPatterns(ItemStack conditionStack, NonNullList<ResourceLocation> patternIDs, NonNullList<RitualBlockPos> reagents) {
 		if (!(conditionStack.getItem() instanceof ArmorItem) || !Augmentation.isAugmented(conditionStack)) {
 			return false;
 		}
-		BlockPos pos = reagents.get(41).getBlockPos(); // throws error in console if attempt to start ritual directly after activating it, might crash server idk
-		ItemStack imbueStack = this.getImbuePedestal(pos);
+//		BlockPos posit = null;
+//		reagents.stream().filter(r -> r.getIndex() == 18).findFirst().ifPresent(pos -> {posit = pos.getBlockPos();}); //i will figure out how streams work someday, but not today
+		BlockPos pos = null;
+		for (RitualBlockPos rbp : reagents) {
+			if (rbp.getIndex() == 18)
+				pos = rbp.getBlockPos();
+		}
+		ItemStack imbueStack = null;
+		if (pos != null) {
+			imbueStack = this.getImbuePedestal(pos);
+		}
 
 		if (imbueStack == null)return false;
 		this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), reagents,getTargetArmor(conditionStack));
@@ -151,8 +159,7 @@ public class RitualEffectImbueArmor extends RitualEffect {
 		return imbueItem;
 	}
 
-	private void replaceReagents(ResourceLocation key, NonNullList<RitualBlockPos> reagents,
-			NonNullList<ResourceLocation> replacements) {
+	private void replaceReagents(ResourceLocation key, NonNullList<RitualBlockPos> reagents, NonNullList<ResourceLocation> replacements) {
 		if (reagents.size() == 0 || replacements.size() == 0) {
 			return;
 		}
