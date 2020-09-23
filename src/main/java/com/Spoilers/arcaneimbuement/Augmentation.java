@@ -68,7 +68,8 @@ public class Augmentation {
 		nbt.putShort("experience", this.experience);
 	}
 	
-	public void increaseLevel() {
+	public void increaseLevel(CompoundNBT nbt) {
 		this.level ++;
+		nbt.putByte("level", this.level);
 	}
 }

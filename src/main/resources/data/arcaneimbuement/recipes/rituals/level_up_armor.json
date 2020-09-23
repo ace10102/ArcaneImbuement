@@ -1,0 +1,117 @@
+{
+	"type": "mana-and-artifice:ritual",
+	"tier": 1,
+	"pattern":
+	[
+		[ 0, 0,30,10, 0,11,31, 0, 0 ],
+		[ 0,18, 0, 0, 6, 0, 0,19, 0 ],
+		[37, 0,22, 0, 2, 0,23, 0,32 ],
+		[17, 0, 0,26, 0,27, 0, 0,12 ],
+		[ 0, 9, 4, 0, 1, 0, 5, 7, 0 ],
+		[16, 0, 0,29, 0,28, 0, 0,13 ],
+		[36, 0,25, 0, 3, 0,24, 0,33 ],
+		[ 0,21, 0, 0, 8, 0, 0,20, 0 ],
+		[ 0, 0,35,15, 0,14,34, 0, 0 ]
+	],
+	"displayPattern":
+	[
+		[ 0, 0,12,-1, 0,-1, 2, 0, 0 ],
+		[ 0,-1, 0, 0, 1, 0, 0,-1, 0 ],
+		[11, 0,19, 0,14, 0,17, 0, 3 ],
+		[-1, 0, 0,-1, 0,-1, 0, 0,-1 ],
+		[ 0,10,16, 0,23, 0,20, 4, 0 ],
+		[-1, 0, 0,-1, 0,-1, 0, 0,-1 ],
+		[ 9, 0,21, 0,18, 0,15, 0, 5 ],
+		[ 0,-1, 0, 0, 7, 0, 0,-1, 0 ],
+		[ 0, 0, 8,-1, 0,-1, 6, 0, 0 ]
+	],
+	"reagents":
+	[
+		"  IE EI  ",
+		" F  D  F ",
+		"I G B G I",
+		"E  H H  E",
+		" DC A CD ",
+		"E  H H  E",
+		"I G B G I",
+		" F  D  F ",
+		"  IE EI  "
+	],
+	"keys":
+	{
+		"A":
+		{
+			"item": "arcaneimbuement:dynamic-armor",
+			"optional": false,
+			"consume": true,
+			"is_dynamic": true,
+			"dynamic_source": true
+		},
+		"B":
+		{
+			"item": "mana-and-artifice:rune_aura",
+			"optional": false,
+			"consume": true
+		},
+		"C":
+		{
+			"item": "minecraft:phantom_membrane",
+			"optional": false,
+			"consume": true
+		},
+		"D":
+		{
+			"item": "arcaneimbuement:dynamic-fabric",
+			"optional": true,
+			"consume": true,
+			"is_dynamic": true
+		},
+		"E":
+		{
+			"item": "minecraft:gold_nugget",
+			"optional": false,
+			"consume": true
+		},
+		"F":
+		{
+			"item": "arcaneimbuement:experience_bottle_1",
+			"optional": true,
+			"consume": true,
+			"is_dynamic": true
+		},
+		"G":
+		{
+			"item": "arcaneimbuement:experience_bottle_2",
+			"optional": true,
+			"consume": true,
+			"is_dynamic": true
+		},
+		"H":
+		{
+			"item": "arcaneimbuement:experience_bottle_3",
+			"optional": true,
+			"consume": true,
+			"is_dynamic": true
+		},
+		"I":
+		{
+			"item": "arcaneimbuement:experience_bottle_4",
+			"optional": true,
+			"consume": true,
+			"is_dynamic": true
+		}
+	},
+	"manaweave":
+	[
+		"mana-and-artifice:manaweave_patterns/circle",
+		"mana-and-artifice:manaweave_patterns/split_triangle"
+	],
+	"parameters":
+	{
+		"innerColor": "0x0032FF",
+		"outerColor": "0x0096FF",
+		"displayIndexes": false,
+		"kittable": false,
+		"beamColor": "0x16E1E1"
+	}
+}

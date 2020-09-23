@@ -13,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -40,36 +39,24 @@ public class RitualEffectImbueArmor extends RitualEffect {
 		}
 		BlockPos[] checkPositions = new BlockPos[] { ritualCenter.add(3, 0, 3), ritualCenter.add(-3, 0, 3),
 				ritualCenter.add(-3, 0, -3), ritualCenter.add(3, 0, -3) };
-		BlockState[] checkStates = new BlockState[] { world.getBlockState(checkPositions[0]), world.getBlockState(checkPositions[1]), 
-				world.getBlockState(checkPositions[2]), world.getBlockState(checkPositions[3])};
 		for (int i = 0; i < checkPositions.length; i++) {
-			BlockPos indexPos = checkPositions[i];
-			BlockState indexState = checkStates[i];
+			BlockState indexState = world.getBlockState(checkPositions[i]);
 			if (indexState.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal"))) return false;
-			TileEntity tile = world.getTileEntity(indexPos);
-			if (tile instanceof IInventory) {
-				IInventory inventory = (IInventory) tile;
-				if (inventory.getStackInSlot(0).getItem() != ForgeRegistries.ITEMS.getValue(new ResourceLocation("mana-and-artifice", "mana_crystal_fragment"))) return false;
-				inventory.getStackInSlot(0).setCount(0);
-				world.notifyBlockUpdate(indexPos, indexState, indexState, 2);
-			}
+			IInventory inventory = (IInventory) world.getTileEntity(checkPositions[i]);
+			if (inventory.getStackInSlot(0).getItem() != ForgeRegistries.ITEMS.getValue(new ResourceLocation("mana-and-artifice", "mana_crystal_fragment"))) return false;
+			inventory.getStackInSlot(0).setCount(0);
+			world.notifyBlockUpdate(checkPositions[i], indexState, indexState, 2);	
 		}
 
 		BlockPos[] targetPosition = new BlockPos[] { ritualCenter.add(2, 0, 0), ritualCenter.add(-2, 0, 0),
 				ritualCenter.add(0, 0, 2), ritualCenter.add(0, 0, -2) };
-		BlockState[] targetStates = new BlockState[] { world.getBlockState(targetPosition[0]), world.getBlockState(targetPosition[1]), 
-				world.getBlockState(targetPosition[2]),world.getBlockState(targetPosition[3])};
 		for (int i = 0; i < targetPosition.length; i++) {
-			BlockPos indexPos = targetPosition[i];
-			BlockState indexState = targetStates[i];
+			BlockState indexState = world.getBlockState(targetPosition[i]);
 			if (indexState.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal"))) continue;
-			TileEntity tile = world.getTileEntity(indexPos);
-			if (tile instanceof IInventory) {
-				IInventory inventory = (IInventory) tile;
-				if (inventory.getStackInSlot(0).getItem() != ForgeRegistries.ITEMS.getValue(new ResourceLocation("mana-and-artifice", "mana_crystal_fragment"))) return false;
-				inventory.getStackInSlot(0).setCount(0); // todo replace mana crystal with imbuement focus
-				world.notifyBlockUpdate(indexPos, indexState, indexState, 2);
-			}
+			IInventory inventory = (IInventory) world.getTileEntity(targetPosition[i]);
+			if (inventory.getStackInSlot(0).getItem() != ForgeRegistries.ITEMS.getValue(new ResourceLocation("mana-and-artifice", "mana_crystal_fragment"))) return false;
+			inventory.getStackInSlot(0).setCount(0); // todo replace mana crystal with imbuement focus
+			world.notifyBlockUpdate(targetPosition[i], indexState, indexState, 2);		
 		}
 
 		ItemStack imbuedArmor = targetItem.copy();
@@ -85,20 +72,14 @@ public class RitualEffectImbueArmor extends RitualEffect {
 	public boolean canRitualStart(PlayerEntity caster, World world, BlockPos ritualCenter, IRitualRecipe ritual) {
 		BlockPos[] checkPositions = new BlockPos[] { ritualCenter.add(3, 0, 3), ritualCenter.add(-3, 0, 3),
 				ritualCenter.add(-3, 0, -3), ritualCenter.add(3, 0, -3) };
-		BlockState[] states = new BlockState[] { world.getBlockState(checkPositions[0]), world.getBlockState(checkPositions[1]),
-				world.getBlockState(checkPositions[2]), world.getBlockState(checkPositions[3]) };
 		for (int i = 0; i < checkPositions.length; i++) {
-			BlockPos pos = checkPositions[i];
-			BlockState state = states[i];
+			BlockState state = world.getBlockState(checkPositions[i]);
 			if (state.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal")))return false;
-			TileEntity tile = world.getTileEntity(pos);
-			if (tile instanceof IInventory) {
-				IInventory inventory = (IInventory) tile;
-				if (inventory.getStackInSlot(0).getItem() != ForgeRegistries.ITEMS.getValue(new ResourceLocation("mana-and-artifice", "mana_crystal_fragment"))) {
-					return false;
-				}
+			IInventory inventory = (IInventory) world.getTileEntity(checkPositions[i]);
+			if (inventory.getStackInSlot(0).getItem() != ForgeRegistries.ITEMS.getValue(new ResourceLocation("mana-and-artifice", "mana_crystal_fragment"))) {
+				return false;		
 			}
-		}
+		}//probably a better way to do this v
 		BlockPos[] targetPosition = new BlockPos[] { ritualCenter.add(2, 0, 0), ritualCenter.add(-2, 0, 0), ritualCenter.add(0, 0, 2), ritualCenter.add(0, 0, -2) };
 		BlockState[] targetStates = new BlockState[] { world.getBlockState(targetPosition[0]), world.getBlockState(targetPosition[1]),
 				world.getBlockState(targetPosition[2]), world.getBlockState(targetPosition[3]) };
@@ -109,8 +90,7 @@ public class RitualEffectImbueArmor extends RitualEffect {
 	}
 
 	@Override
-	protected int getApplicationTicks(ServerWorld world, BlockPos pos, IRitualRecipe recipe,
-			NonNullList<ItemStack> reagents) {
+	protected int getApplicationTicks(ServerWorld world, BlockPos pos, IRitualRecipe recipe, NonNullList<ItemStack> reagents) {
 		return 10;
 	}
 
@@ -142,19 +122,14 @@ public class RitualEffectImbueArmor extends RitualEffect {
 		World world = Minecraft.getInstance().world;
 		ItemStack imbueItem = null;
 		BlockPos[] targetPosition = new BlockPos[] { pos.add(2, 0, 0), pos.add(-2, 0, 0), pos.add(0, 0, 2), pos.add(0, 0, -2) };
-		BlockState[] targetStates = new BlockState[] { world.getBlockState(targetPosition[0]), world.getBlockState(targetPosition[1]), 
-				world.getBlockState(targetPosition[2]), world.getBlockState(targetPosition[3]) };
 		for (int i = 0; i < targetPosition.length; i++) {
-			BlockPos indexPos = targetPosition[i];
-			BlockState state = targetStates[i];
+			BlockState state = world.getBlockState(targetPosition[i]);
 			if (state.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal"))) continue;
-			TileEntity tile = world.getTileEntity(indexPos);
-			if (tile instanceof IInventory) {
-				IInventory inventory = (IInventory) tile;
-				if (inventory.getStackInSlot(0).getItem() == ForgeRegistries.ITEMS.getValue(new ResourceLocation("mana-and-artifice", "mana_crystal_fragment"))) {
-					imbueItem = inventory.getStackInSlot(0); // todo update for imbuement foci
-				}
+			IInventory inventory = (IInventory) world.getTileEntity(targetPosition[i]);
+			if (inventory.getStackInSlot(0).getItem() == ForgeRegistries.ITEMS.getValue(new ResourceLocation("mana-and-artifice", "mana_crystal_fragment"))) {
+				imbueItem = inventory.getStackInSlot(0); // todo update for imbuement foci
 			}
+			
 		}
 		return imbueItem;
 	}

@@ -55,7 +55,7 @@
 		},
 		"C":
 		{
-			"item": "mana-and-artifice:vinteum_ingot",
+			"item": "mana-and-artifice:superheated_vinteum_ingot",
 			"optional": false,
 			"consume": true
 		},
@@ -93,10 +93,10 @@
 	],
 	"parameters":
 	{
-		"innerColor": "0x00FFCC",
-		"outerColor": "0x00FF8A",
+		"innerColor": "0x0032FF",
+		"outerColor": "0x0096FF",
 		"displayIndexes": false,
 		"kittable": false,
-		"beamColor": "0x16ba99"
+		"beamColor": "0x16E1E1"
 	}
 }

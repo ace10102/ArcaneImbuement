@@ -94,5 +94,26 @@
 				"location": "arcaneimbuement:rituals/imbue_armor"
 			}
 		]
+	},
+	"Armor Level Up": {
+		"index": 0,
+		"category": "rituals",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "Level your Armor"
+			},
+			{
+				"type": "text",
+				"value": "this is a test"
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "ritual",
+				"location": "arcaneimbuement:rituals/level_up_armor"
+			}
+		]
 	}
 }
