@@ -13,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -44,13 +43,10 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 		for(int i = 0; i< pedestalPos.length; i++) {
 			BlockState pedestalState = world.getBlockState(pedestalPos[i]);
 			if (pedestalState.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal"))) return false;
-			TileEntity pedestalTile = world.getTileEntity(pedestalPos[i]);
-			if (pedestalTile instanceof IInventory) {
-				IInventory inventory = (IInventory) pedestalTile;
-				if (inventory.getStackInSlot(0).getItem() != ForgeRegistries.ITEMS.getValue(pedestalFocus)) return false;
-				inventory.getStackInSlot(0).setCount(0);
-				world.notifyBlockUpdate(pedestalPos[i], pedestalState, pedestalState, 2);
-			}
+			IInventory pedestalInventory = (IInventory) world.getTileEntity(pedestalPos[i]);
+			if (!pedestalInventory.getStackInSlot(0).getItem().getRegistryName().equals(pedestalFocus)) return false;
+			pedestalInventory.getStackInSlot(0).setCount(0);
+			world.notifyBlockUpdate(pedestalPos[i], pedestalState, pedestalState, 2);	
 		}
 		
 		ItemStack imbuedArmor = targetItem.copy();
@@ -79,11 +75,9 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 		for(int i = 0; i< pedestalPos.length; i++) {
 			BlockState pedestalState = world.getBlockState(pedestalPos[i]);
 			if (pedestalState.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal"))) return false;
-			TileEntity pedestalTile = world.getTileEntity(pedestalPos[i]);
-			if (pedestalTile instanceof IInventory) {
-				IInventory inventory = (IInventory) pedestalTile;
-				if (inventory.getStackInSlot(0).getItem() != ForgeRegistries.ITEMS.getValue(pedestalFocus)) return false;
-			}
+			IInventory pedestalInventory = (IInventory) world.getTileEntity(pedestalPos[i]);
+			if (!pedestalInventory.getStackInSlot(0).getItem().getRegistryName().equals(pedestalFocus)) return false;
+			
 		}
 		
 		return true;
@@ -99,8 +93,9 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 		if (!(conditionStack.getItem() instanceof ArmorItem) || !Augmentation.isAugmented(conditionStack)) {
 			return false;
 		}
-		byte level = Augmentation.fromNBT(conditionStack.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG)).getLevel();
-		if (level >= 5) { //add experience for level up code
+		Augmentation aug = Augmentation.fromNBT(conditionStack.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG));
+		byte level = aug.getLevel();
+		if (level >= 5 || aug.getExperience() < aug.getExperienceForLevel(level)) {
 			return false;
 		}
 			
@@ -122,7 +117,7 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 		int replaceIndex = 0;
 		for (RitualBlockPos reagent : reagents) {
 			if (reagent.getReagent() == null) continue;
-			if (reagent.getReagent().getResourceLocation().compareTo(key) == 0) {
+			if (reagent.getReagent().getResourceLocation().equals(key)) {
 				reagent.getReagent().setResourceLocation((ResourceLocation) replacements.get(replaceIndex));
 			} 
 		}

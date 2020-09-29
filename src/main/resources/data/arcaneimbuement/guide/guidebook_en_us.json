@@ -115,5 +115,26 @@
 				"location": "arcaneimbuement:rituals/level_up_armor"
 			}
 		]
+	},
+	"Spellbinding": {
+		"index": 0,
+		"category": "rituals",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "bind spells to stuff"
+			},
+			{
+				"type": "text",
+				"value": "this is a test"
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "ritual",
+				"location": "arcaneimbuement:rituals/spellbinding"
+			}
+		]
 	}
 }

@@ -6,9 +6,7 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import com.ma.entities.sorcery.SpellCastingResult;
 import com.ma.spells.SpellCaster;
-import com.ma.spells.crafting.SpellRecipe;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.LivingEntity;
@@ -34,13 +32,11 @@ public class SpellTriggerHandler {
 		if(event.getAmount() > entity.getHealth()) {	
 			for(Hand hand : Hand.values()) {
 				ItemStack handItem = entity.getHeldItem(hand);
-				if (handItem.getItem() == Items.TOTEM_OF_UNDYING && SpellRecipe.stackContainsSpell(handItem)) {
+				if (handItem.getItem() == Items.TOTEM_OF_UNDYING && handItem.getTag().contains("spell")) {
 					if(customTotemDeathProtection(event.getSource(), entity, handItem)) {
 						
-//						SpellCastingResult result = ImbuedSpellCaster.Cast(handItem, entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
 						if(entity instanceof PlayerEntity) {
-							SpellCastingResult result = SpellCaster.Cast(handItem, (PlayerEntity) entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
-							System.out.println(result);
+							SpellCaster.Cast(handItem, (PlayerEntity) entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
 						}	
 					}
 					event.setCanceled(true);
@@ -79,10 +75,10 @@ public class SpellTriggerHandler {
 	public static void castOnLegs(LivingJumpEvent event) {
 		LivingEntity entity = event.getEntityLiving();
 		ItemStack legs = entity.getItemStackFromSlot(EquipmentSlotType.LEGS);
-		if(legs != null && SpellRecipe.stackContainsSpell(legs)) {
-			
-			ImbuedSpellCaster.Cast(legs, entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
-			
+		if(legs != null && legs.getTag().contains("spell")) {
+			if (entity instanceof PlayerEntity) {
+			SpellCaster.Cast(legs, (PlayerEntity) entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
+			}
 		}
 	}
 	@SubscribeEvent
@@ -91,10 +87,10 @@ public class SpellTriggerHandler {
 		ItemStack boots = entity.getItemStackFromSlot(EquipmentSlotType.FEET);
 		float fallDistance = event.getDistance();
 		if(fallDistance > 4) {
-			if(boots != null && SpellRecipe.stackContainsSpell(boots)) {
-				
-				ImbuedSpellCaster.Cast(boots, entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
-				
+			if(boots != null && boots.getTag().contains("spell")) {
+				if (entity instanceof PlayerEntity) {
+				SpellCaster.Cast(boots, (PlayerEntity) entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
+				}
 			}
 		}
 	}

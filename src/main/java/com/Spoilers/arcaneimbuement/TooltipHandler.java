@@ -36,7 +36,7 @@ public class TooltipHandler {
 		
 		if(Augmentation.isAugmented(hoveredItem)) {
 			
-			addImbuementInformation(hoveredItem, event.getToolTip());
+			addAugmentInformation(hoveredItem, event.getToolTip());
 		}
 		if(SpellRecipe.stackContainsSpell(hoveredItem) && !(hoveredItem.getItem() instanceof ItemSpellRecipe)) {
 			
@@ -45,29 +45,36 @@ public class TooltipHandler {
 			
 		}
 	}
-	public static void addImbuementInformation(ItemStack stack, List<ITextComponent> tooltip) {
+	public static void addAugmentInformation(ItemStack stack, List<ITextComponent> tooltip) {
 		Augmentation augment = Augmentation.fromNBT(stack.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG));
 		short exp = augment.getExperience();
 		byte level = augment.getLevel();
+		int forlvl = augment.getExperienceForLevel(level);
 		tooltip.add((ITextComponent)new TranslationTextComponent("Augmented").func_240699_a_(TextFormatting.DARK_AQUA));
 		tooltip.add((ITextComponent)new TranslationTextComponent("Exp: " + exp).func_240699_a_(TextFormatting.DARK_AQUA));
 		tooltip.add((ITextComponent)new TranslationTextComponent("Level: " + level).func_240699_a_(TextFormatting.DARK_AQUA));
+		if (KeyboardUtil.isShift() && forlvl != -1) {
+			tooltip.add((ITextComponent)new TranslationTextComponent("Can lvl up at: " + forlvl + " Exp").func_240699_a_(TextFormatting.DARK_AQUA));
+		}
+		else if (KeyboardUtil.isShift() && forlvl == -1) {
+			tooltip.add((ITextComponent)new TranslationTextComponent("Lvl Max").func_240699_a_(TextFormatting.DARK_AQUA));
+		}	
 	}
 	public static void addArmorInformation(ItemStack stack, List<ITextComponent> tooltip) {
 		if (stack.getItem() instanceof ArmorItem) {
 			ArmorItem hoveredItem = (ArmorItem)stack.getItem();
 			
-			if(KeyboardUtil.isShift()) {
-				if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.HEAD) {
+			if (KeyboardUtil.isShift()) {
+				if (hoveredItem.getEquipmentSlot() == EquipmentSlotType.HEAD) {
 					tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on ").func_240699_a_(TextFormatting.GOLD));
 				}
-				if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.CHEST) {
+				if (hoveredItem.getEquipmentSlot() == EquipmentSlotType.CHEST) {
 					tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Hit").func_240699_a_(TextFormatting.GOLD));
 				}
-				if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.LEGS) {
+				if (hoveredItem.getEquipmentSlot() == EquipmentSlotType.LEGS) {
 					tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Jump").func_240699_a_(TextFormatting.GOLD));
 				}
-				if(hoveredItem.getEquipmentSlot() == EquipmentSlotType.FEET) {
+				if (hoveredItem.getEquipmentSlot() == EquipmentSlotType.FEET) {
 					tooltip.add((ITextComponent)new TranslationTextComponent("Spell Activated on Fall").func_240699_a_(TextFormatting.GOLD));
 				}
 			}	
@@ -86,10 +93,10 @@ public class TooltipHandler {
             if (shape != null && component != null) {
             	tooltip.add((ITextComponent)new TranslationTextComponent("Spell: " + shapeText.getString() + " " + componentText.getString()).func_240699_a_(TextFormatting.AQUA));
             }
-            if(!KeyboardUtil.isShift()) {
+            if (!KeyboardUtil.isShift()) {
             	tooltip.add((ITextComponent)new TranslationTextComponent("Shift for Spell details").func_240699_a_(TextFormatting.AQUA));
             }
-            if(KeyboardUtil.isShift()) {
+            if (KeyboardUtil.isShift()) {
             	if (shape != null && hasAttributes(shape)) {
                     tooltip.add((ITextComponent)new TranslationTextComponent("item.mana-and-artifice.spell.shape_attributes").func_240699_a_(TextFormatting.GREEN));
                     for (AttributeValuePair attr : ((Shape)shape.getPart()).getModifiableAttributes()) {

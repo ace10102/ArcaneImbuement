@@ -38,7 +38,8 @@ public class RitualEffectAugmentArmor extends RitualEffect {
         }
         ItemStack augmentedArmor = new ItemStack(targetItem.getItem());
         Augmentation.augment(augmentedArmor, new Augmentation());
-        ItemEntity item = new ItemEntity((World)world, (double)((float)ritualCenter.up().getX() + 0.5f), (double)((float)ritualCenter.up().getY() + 0.5f), (double)((float)ritualCenter.up().getZ() + 0.5f), augmentedArmor);
+        ItemEntity item = new ItemEntity((World)world, (double)((float)ritualCenter.up().getX() + 0.5f),
+        		(double)((float)ritualCenter.up().getY() + 0.5f), (double)((float)ritualCenter.up().getZ() + 0.5f), augmentedArmor);
         world.addEntity((Entity)item);
 		return true;
 	}

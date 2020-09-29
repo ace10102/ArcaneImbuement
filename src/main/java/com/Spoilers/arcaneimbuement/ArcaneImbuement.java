@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import com.Spoilers.arcaneimbuement.rituals.RitualEffectAugmentArmor;
 import com.Spoilers.arcaneimbuement.rituals.RitualEffectImbueArmor;
 import com.Spoilers.arcaneimbuement.rituals.RitualEffectLevelUpArmor;
+import com.Spoilers.arcaneimbuement.rituals.RitualEffectSpellbinding;
 import com.ma.api.rituals.RitualEffect;
 
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +28,7 @@ public class ArcaneImbuement {
 		/*FMLJavaModLoadingContext.get()).register(RegisterBook.onRegisterRituals);
 		MinecraftForge.EVENT_BUS.register(RegisterBook.class :: onRegisterGuidebooks);*/
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.addListener(AugmentedArmorHandler::grantAugmentEXP);
 
 	}
 	
@@ -41,6 +43,8 @@ public class ArcaneImbuement {
 					.setRegistryName(new ResourceLocation(ArcaneImbuement.MOD_ID, "ritual-effect-imbue-armor")));
 			event.getRegistry().register(new RitualEffectLevelUpArmor(new ResourceLocation(ArcaneImbuement.MOD_ID, "rituals/level_up_armor"))
 					.setRegistryName(new ResourceLocation(ArcaneImbuement.MOD_ID, "ritual-effect-level-up-armor")));
+			event.getRegistry().register(new RitualEffectSpellbinding(new ResourceLocation(ArcaneImbuement.MOD_ID, "rituals/spellbinding"))
+					.setRegistryName(new ResourceLocation(ArcaneImbuement.MOD_ID, "ritual-effect-spellbinding")));
 			ArcaneImbuement.LOGGER.info("Arcane Imbuement rituals registered");
 		}
 	}

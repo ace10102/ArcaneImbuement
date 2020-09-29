@@ -143,7 +143,8 @@ public class RitualEffectImbueArmor extends RitualEffect {
 			if (reagent.getReagent() == null) continue;
 			if (reagent.getReagent().getResourceLocation().compareTo(key) == 0) {
 				reagent.getReagent().setResourceLocation((ResourceLocation) replacements.get(replaceIndex));
-			} // todo will need logic update for larger replacement lists
+				if (replaceIndex < (replacements.size()-1)) replaceIndex++;
+			} 
 		}
 		return;
 	}
