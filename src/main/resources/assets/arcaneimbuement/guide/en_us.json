@@ -1,0 +1,146 @@
+{
+	"Totem": {
+		"index": 0,
+		"category": "manaweaving",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "Spell Totem"
+			},
+			{
+				"type": "text",
+				"value": "This totem casts spells"
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "manaweaving_altar",
+				"location": "arcaneimbuement:manaweaving/manaweaving_totem"
+			}
+		]
+	},
+	"Armor": {
+		"index": 0,
+		"category": "manaweaving",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "Spell armor"
+			},
+			{
+				"type": "text",
+				"value": "This armor casts spells"
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "manaweaving_altar",
+				"location": "arcaneimbuement:manaweaving/manaweaving_helmet"
+			},
+			{
+				"type": "manaweaving_altar",
+				"location": "arcaneimbuement:manaweaving/manaweaving_chest"
+			},
+			{
+				"type": "manaweaving_altar",
+				"location": "arcaneimbuement:manaweaving/manaweaving_legs"
+			},
+			{
+				"type": "manaweaving_altar",
+				"location": "arcaneimbuement:manaweaving/manaweaving_boots"
+			}
+		]
+	},
+	"Armor Augmentation": {
+		"index": 0,
+		"category": "rituals",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "Augment Armor"
+			},
+			{
+				"type": "text",
+				"value": "this is a test"
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "ritual",
+				"location": "arcaneimbuement:rituals/augment_armor"
+			}
+		]
+	},
+	"Armor Imbuement": {
+		"index": 0,
+		"category": "rituals",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "Imbue Armor"
+			},
+			{
+				"type": "text",
+				"value": "this is a test"
+			},
+			{
+				"type": "image",
+				"location": "arcaneimbuement:textures/guide/armor_imbuement.png",
+				"width": 128,
+				"height": 128
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "ritual",
+				"location": "arcaneimbuement:rituals/imbue_armor"
+			}
+		]
+	},
+	"Armor Level Up": {
+		"index": 0,
+		"category": "rituals",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "Level your Armor"
+			},
+			{
+				"type": "text",
+				"value": "this is a test"
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "ritual",
+				"location": "arcaneimbuement:rituals/level_up_armor"
+			}
+		]
+	},
+	"Spellbinding": {
+		"index": 0,
+		"category": "rituals",
+		"tier": 3,
+		"sections": [
+			{
+				"type": "title",
+				"value": "bind spells to stuff"
+			},
+			{
+				"type": "text",
+				"value": "this is a test"
+			}
+		],
+		"related_recipes": [
+			{
+				"type": "ritual",
+				"location": "arcaneimbuement:rituals/spellbinding"
+			}
+		]
+	}
+}

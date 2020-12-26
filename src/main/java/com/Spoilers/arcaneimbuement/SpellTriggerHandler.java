@@ -6,7 +6,7 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import com.ma.spells.SpellCaster;
+import com.ma.api.ManaAndArtificeMod;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.LivingEntity;
@@ -20,6 +20,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+
 
 @Mod.EventBusSubscriber(modid = ArcaneImbuement.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SpellTriggerHandler {
@@ -36,7 +37,8 @@ public class SpellTriggerHandler {
 					if(customTotemDeathProtection(event.getSource(), entity, handItem)) {
 						
 						if(entity instanceof PlayerEntity) {
-							SpellCaster.Cast(handItem, (PlayerEntity) entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
+//							SpellCaster.PlayerCast(handItem, (PlayerEntity) entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
+							ManaAndArtificeMod.getSpellHelper().playerCast(handItem, (PlayerEntity) entity, false);
 						}	
 					}
 					event.setCanceled(true);
@@ -77,7 +79,8 @@ public class SpellTriggerHandler {
 		ItemStack legs = entity.getItemStackFromSlot(EquipmentSlotType.LEGS);
 		if(legs != null && legs.getTag().contains("spell")) {
 			if (entity instanceof PlayerEntity) {
-			SpellCaster.Cast(legs, (PlayerEntity) entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
+//				SpellCaster.PlayerCast(legs, (PlayerEntity) entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
+				ManaAndArtificeMod.getSpellHelper().playerCast(legs, (PlayerEntity) entity, false);
 			}
 		}
 	}
@@ -89,7 +92,8 @@ public class SpellTriggerHandler {
 		if(fallDistance > 4) {
 			if(boots != null && boots.getTag().contains("spell")) {
 				if (entity instanceof PlayerEntity) {
-				SpellCaster.Cast(boots, (PlayerEntity) entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
+//					SpellCaster.PlayerCast(boots, (PlayerEntity) entity, entity.getPositionVec().add(0.0, (double)entity.getEyeHeight(), 0.0), entity.getLookVec(), entity.world, false);
+					ManaAndArtificeMod.getSpellHelper().playerCast(boots, (PlayerEntity) entity, false);
 				}
 			}
 		}

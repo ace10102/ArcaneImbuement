@@ -66,7 +66,7 @@ This is a long form description of the mod. You can write whatever you want here
 [[dependencies.arcaneimbuement]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.2]"
+    versionRange="[1.16.3]"
     ordering="NONE"
     side="BOTH"
 

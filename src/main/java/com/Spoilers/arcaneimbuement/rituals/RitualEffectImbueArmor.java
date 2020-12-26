@@ -1,15 +1,13 @@
 package com.Spoilers.arcaneimbuement.rituals;
 
-import com.Spoilers.arcaneimbuement.Augmentation;
-import com.ma.api.recipes.IRitualRecipe;
+import com.Spoilers.arcaneimbuement.augments.Augmentation;
+import com.ma.api.rituals.IRitualContext;
 import com.ma.api.rituals.RitualBlockPos;
 import com.ma.api.rituals.RitualEffect;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
@@ -17,7 +15,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class RitualEffectImbueArmor extends RitualEffect {
@@ -27,9 +24,11 @@ public class RitualEffectImbueArmor extends RitualEffect {
 	}
 
 	@Override
-	protected boolean applyRitualEffect(PlayerEntity ritualCaster, ServerWorld world, BlockPos ritualCenter, IRitualRecipe completedRecipe, NonNullList<ItemStack> reagentList) {
+	protected boolean applyRitualEffect(IRitualContext context) {
+		World world = context.getWorld();
+		BlockPos center = context.getCenter();
 		ItemStack targetItem = ItemStack.EMPTY;
-		for (ItemStack stack : reagentList) {
+		for (ItemStack stack : context.getCollectedReagents()) {
 			if (!(stack.getItem() instanceof ArmorItem) || !Augmentation.isAugmented(stack)) continue;
 			targetItem = stack;
 			break;
@@ -37,8 +36,8 @@ public class RitualEffectImbueArmor extends RitualEffect {
 		if (targetItem == null) {
 			return false;
 		}
-		BlockPos[] checkPositions = new BlockPos[] { ritualCenter.add(3, 0, 3), ritualCenter.add(-3, 0, 3),
-				ritualCenter.add(-3, 0, -3), ritualCenter.add(3, 0, -3) };
+		BlockPos[] checkPositions = new BlockPos[] { center.add(3, 0, 3), center.add(-3, 0, 3),
+				center.add(-3, 0, -3), center.add(3, 0, -3) };
 		for (int i = 0; i < checkPositions.length; i++) {
 			BlockState indexState = world.getBlockState(checkPositions[i]);
 			if (indexState.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal"))) return false;
@@ -48,8 +47,8 @@ public class RitualEffectImbueArmor extends RitualEffect {
 			world.notifyBlockUpdate(checkPositions[i], indexState, indexState, 2);	
 		}
 
-		BlockPos[] targetPosition = new BlockPos[] { ritualCenter.add(2, 0, 0), ritualCenter.add(-2, 0, 0),
-				ritualCenter.add(0, 0, 2), ritualCenter.add(0, 0, -2) };
+		BlockPos[] targetPosition = new BlockPos[] { center.add(2, 0, 0), center.add(-2, 0, 0),
+				center.add(0, 0, 2), center.add(0, 0, -2) };
 		for (int i = 0; i < targetPosition.length; i++) {
 			BlockState indexState = world.getBlockState(targetPosition[i]);
 			if (indexState.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal"))) continue;
@@ -62,16 +61,18 @@ public class RitualEffectImbueArmor extends RitualEffect {
 		ItemStack imbuedArmor = targetItem.copy();
 		Augmentation aug = Augmentation.fromNBT(imbuedArmor.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG));
 		aug.grantExperience((short) 50, imbuedArmor.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG)); // todo invent imbuements
-		ItemEntity item = new ItemEntity((World) world, (double) ((float) ritualCenter.up().getX() + 0.5f), 
-				(double) ((float) ritualCenter.up().getY() + 0.5f), (double) ((float) ritualCenter.up().getZ() + 0.5f), imbuedArmor);
+		ItemEntity item = new ItemEntity((World) world, (double) ((float) center.up().getX() + 0.5f), 
+				(double) ((float) center.up().getY() + 0.5f), (double) ((float) center.up().getZ() + 0.5f), imbuedArmor);
 		world.addEntity((Entity) item);
 		return true;
 	}
 
 	@Override
-	public boolean canRitualStart(PlayerEntity caster, World world, BlockPos ritualCenter, IRitualRecipe ritual) {
-		BlockPos[] checkPositions = new BlockPos[] { ritualCenter.add(3, 0, 3), ritualCenter.add(-3, 0, 3),
-				ritualCenter.add(-3, 0, -3), ritualCenter.add(3, 0, -3) };
+	public boolean canRitualStart(IRitualContext context) {
+		World world = context.getWorld();
+		BlockPos center = context.getCenter();
+		BlockPos[] checkPositions = new BlockPos[] { center.add(3, 0, 3), center.add(-3, 0, 3),
+				center.add(-3, 0, -3), center.add(3, 0, -3) };
 		for (int i = 0; i < checkPositions.length; i++) {
 			BlockState state = world.getBlockState(checkPositions[i]);
 			if (state.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal")))return false;
@@ -80,7 +81,7 @@ public class RitualEffectImbueArmor extends RitualEffect {
 				return false;		
 			}
 		}//probably a better way to do this v
-		BlockPos[] targetPosition = new BlockPos[] { ritualCenter.add(2, 0, 0), ritualCenter.add(-2, 0, 0), ritualCenter.add(0, 0, 2), ritualCenter.add(0, 0, -2) };
+		BlockPos[] targetPosition = new BlockPos[] { center.add(2, 0, 0), center.add(-2, 0, 0), center.add(0, 0, 2), center.add(0, 0, -2) };
 		BlockState[] targetStates = new BlockState[] { world.getBlockState(targetPosition[0]), world.getBlockState(targetPosition[1]),
 				world.getBlockState(targetPosition[2]), world.getBlockState(targetPosition[3]) };
 		for (BlockState state : targetStates) {
@@ -90,36 +91,42 @@ public class RitualEffectImbueArmor extends RitualEffect {
 	}
 
 	@Override
-	protected int getApplicationTicks(ServerWorld world, BlockPos pos, IRitualRecipe recipe, NonNullList<ItemStack> reagents) {
+	protected int getApplicationTicks(IRitualContext context) {
 		return 10;
 	}
 
 	@Override
-	protected boolean modifyRitualReagentsAndPatterns(ItemStack conditionStack, NonNullList<ResourceLocation> patternIDs, NonNullList<RitualBlockPos> reagents) {
+	protected boolean modifyRitualReagentsAndPatterns(ItemStack conditionStack, IRitualContext context) {
 		if (!(conditionStack.getItem() instanceof ArmorItem) || !Augmentation.isAugmented(conditionStack)) {
 			return false;
 		}
 //		BlockPos posit = null;
 //		reagents.stream().filter(r -> r.getIndex() == 18).findFirst().ifPresent(pos -> {posit = pos.getBlockPos();}); //i will figure out how streams work someday, but not today
 		BlockPos pos = null;
-		for (RitualBlockPos rbp : reagents) {
+		for (RitualBlockPos rbp : context.getIndexedPositions()) {
 			if (rbp.getIndex() == 18)
 				pos = rbp.getBlockPos();
 		}
 		ItemStack imbueStack = null;
 		if (pos != null) {
-			imbueStack = this.getImbuePedestal(pos);
+			imbueStack = this.getImbuePedestal(pos, context.getWorld());
 		}
 
 		if (imbueStack == null)return false;
-		this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), reagents,getTargetArmor(conditionStack));
+		RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:dynamic-armor"), getTargetArmor(conditionStack));
+		RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:dynamic-focus"), getFocusReagents(conditionStack));
+		RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:dynamic-reagent"), getImbueReagents(imbueStack));
+		/*context.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), getTargetArmor(conditionStack));
+		context.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-focus"), getFocusReagents(conditionStack));
+		context.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-reagent"), getImbueReagents(imbueStack));*/
+		/*this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), reagents,getTargetArmor(conditionStack));
 		this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-focus"), reagents,getFocusReagents(conditionStack));
-		this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-reagent"), reagents,getImbueReagents(imbueStack));
+		this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-reagent"), reagents,getImbueReagents(imbueStack));*/
 		return true;
 	}
 
-	private ItemStack getImbuePedestal(BlockPos pos) {
-		World world = Minecraft.getInstance().world;
+	private ItemStack getImbuePedestal(BlockPos pos, World world) {
+//		World world = Minecraft.getInstance().world; //finally can get rid of this hacky shit
 		ItemStack imbueItem = null;
 		BlockPos[] targetPosition = new BlockPos[] { pos.add(2, 0, 0), pos.add(-2, 0, 0), pos.add(0, 0, 2), pos.add(0, 0, -2) };
 		for (int i = 0; i < targetPosition.length; i++) {
@@ -132,21 +139,6 @@ public class RitualEffectImbueArmor extends RitualEffect {
 			
 		}
 		return imbueItem;
-	}
-
-	private void replaceReagents(ResourceLocation key, NonNullList<RitualBlockPos> reagents, NonNullList<ResourceLocation> replacements) {
-		if (reagents.size() == 0 || replacements.size() == 0) {
-			return;
-		}
-		int replaceIndex = 0;
-		for (RitualBlockPos reagent : reagents) {
-			if (reagent.getReagent() == null) continue;
-			if (reagent.getReagent().getResourceLocation().compareTo(key) == 0) {
-				reagent.getReagent().setResourceLocation((ResourceLocation) replacements.get(replaceIndex));
-				if (replaceIndex < (replacements.size()-1)) replaceIndex++;
-			} 
-		}
-		return;
 	}
 
 	private NonNullList<ResourceLocation> getTargetArmor(ItemStack conditionStack) {

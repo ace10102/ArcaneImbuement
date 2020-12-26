@@ -4,10 +4,12 @@ package com.Spoilers.arcaneimbuement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.Spoilers.arcaneimbuement.augments.AugmentedArmorHandler;
 import com.Spoilers.arcaneimbuement.rituals.RitualEffectAugmentArmor;
 import com.Spoilers.arcaneimbuement.rituals.RitualEffectImbueArmor;
 import com.Spoilers.arcaneimbuement.rituals.RitualEffectLevelUpArmor;
 import com.Spoilers.arcaneimbuement.rituals.RitualEffectSpellbinding;
+import com.Spoilers.arcaneimbuement.rituals.RitualEffectTesting;
 import com.ma.api.rituals.RitualEffect;
 
 import net.minecraft.util.ResourceLocation;
@@ -45,6 +47,8 @@ public class ArcaneImbuement {
 					.setRegistryName(new ResourceLocation(ArcaneImbuement.MOD_ID, "ritual-effect-level-up-armor")));
 			event.getRegistry().register(new RitualEffectSpellbinding(new ResourceLocation(ArcaneImbuement.MOD_ID, "rituals/spellbinding"))
 					.setRegistryName(new ResourceLocation(ArcaneImbuement.MOD_ID, "ritual-effect-spellbinding")));
+			event.getRegistry().register(new RitualEffectTesting(new ResourceLocation(ArcaneImbuement.MOD_ID, "rituals/testing_ritual"))
+					.setRegistryName(new ResourceLocation(ArcaneImbuement.MOD_ID, "ritual-effect-testing")));
 			ArcaneImbuement.LOGGER.info("Arcane Imbuement rituals registered");
 		}
 	}

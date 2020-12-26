@@ -26,7 +26,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20200916-1.16.2'
+    mappings channel: 'snapshot', version: '20201028-1.16.3'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -90,12 +90,13 @@ repositories {
         dirs 'libs'
     }
      maven { url 'https://maven.theillusivec4.top/' } 
+	 maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
 }
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.2-33.0.61'
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.23'
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
@@ -115,11 +116,13 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 	
-	compileOnly files('blank:mana-and-artifice-1.0.7.1:api') //api, compilation only
-    runtimeOnly fg.deobf('blank:mana-and-artifice:1.0.7.1') //mod itself, deobf for runtime
+	compileOnly files('blank:mana-and-artifice-1.0.8.5:api') //api, compilation only
+    runtimeOnly fg.deobf('blank:mana-and-artifice:1.1.0.2') //mod itself, deobf for runtime
     
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.2-4.0.0.1")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.2-4.0.0.1:api")    
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.2.0")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.2.0:api")   
+
+    implementation fg.deobf('software.bernie.geckolib:forge-1.16.3-geckolib:3.0.0-beta.8')
 
 }
 

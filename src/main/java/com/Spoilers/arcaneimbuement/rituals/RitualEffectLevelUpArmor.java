@@ -1,15 +1,13 @@
 package com.Spoilers.arcaneimbuement.rituals;
 
-import com.Spoilers.arcaneimbuement.Augmentation;
-import com.ma.api.recipes.IRitualRecipe;
-import com.ma.api.rituals.RitualBlockPos;
+import com.Spoilers.arcaneimbuement.augments.Augmentation;
+import com.ma.api.rituals.IRitualContext;
 import com.ma.api.rituals.RitualEffect;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
@@ -17,7 +15,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class RitualEffectLevelUpArmor extends RitualEffect {
@@ -27,10 +24,13 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 	public RitualEffectLevelUpArmor(ResourceLocation ritualName) {
 		super(ritualName);
 	}
+	
 	@Override
-	protected boolean applyRitualEffect(PlayerEntity ritualCaster, ServerWorld world, BlockPos ritualCenter, IRitualRecipe completedRecipe, NonNullList<ItemStack> reagentList) {
+	protected boolean applyRitualEffect(IRitualContext context) {
+		World world = context.getWorld();
+		BlockPos center = context.getCenter();
 		ItemStack targetItem = ItemStack.EMPTY;
-		for (ItemStack stack : reagentList) {
+		for (ItemStack stack : context.getCollectedReagents()) {
 			if (!(stack.getItem() instanceof ArmorItem) || !Augmentation.isAugmented(stack)) continue;
 			targetItem = stack;
 			break;
@@ -38,8 +38,8 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 		if (targetItem == null) {
 			return false;
 		}
-		BlockPos[] pedestalPos = new BlockPos[] { ritualCenter.add(4, 0, 0), ritualCenter.add(-4, 0, 0),
-				ritualCenter.add(0, 0, 4), ritualCenter.add(0, 0, -4) };
+		BlockPos[] pedestalPos = new BlockPos[] { center.add(4, 0, 0), center.add(-4, 0, 0),
+				center.add(0, 0, 4), center.add(0, 0, -4) };
 		for(int i = 0; i< pedestalPos.length; i++) {
 			BlockState pedestalState = world.getBlockState(pedestalPos[i]);
 			if (pedestalState.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal"))) return false;
@@ -53,25 +53,27 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 		Augmentation aug = Augmentation.fromNBT(imbuedArmor.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG));
 		aug.grantExperience((short) -50, imbuedArmor.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG));
 		aug.increaseLevel(imbuedArmor.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG));
-		ItemEntity item = new ItemEntity((World) world, (double) ((float) ritualCenter.up().getX() + 0.5f), 
-				(double) ((float) ritualCenter.up().getY() + 0.5f), (double) ((float) ritualCenter.up().getZ() + 0.5f), imbuedArmor);
+		ItemEntity item = new ItemEntity((World) world, (double) ((float) center.up().getX() + 0.5f), 
+				(double) ((float) center.up().getY() + 0.5f), (double) ((float) center.up().getZ() + 0.5f), imbuedArmor);
 		world.addEntity((Entity) item);
 		return true;
 	}
 	
 	@Override
-	public boolean canRitualStart(PlayerEntity caster, World world, BlockPos ritualCenter, IRitualRecipe ritual) {
-		BlockPos[] shelvesPos = new BlockPos[] { ritualCenter.add(3, 0, 4), ritualCenter.add(4, 0, 4), ritualCenter.add(4, 0, 3),
-				ritualCenter.add(-3, 0, 4), ritualCenter.add(-4, 0, 4), ritualCenter.add(-4, 0, 3),
-				ritualCenter.add(-3, 0, -4), ritualCenter.add(-4, 0, -4), ritualCenter.add(-4, 0, -3),
-				ritualCenter.add(3, 0, -4), ritualCenter.add(4, 0, -4), ritualCenter.add(4, 0, -3) };
+	public boolean canRitualStart(IRitualContext context) {
+		World world = context.getWorld();
+		BlockPos center = context.getCenter();
+		BlockPos[] shelvesPos = new BlockPos[] { center.add(3, 0, 4), center.add(4, 0, 4), center.add(4, 0, 3),
+				center.add(-3, 0, 4), center.add(-4, 0, 4), center.add(-4, 0, 3),
+				center.add(-3, 0, -4), center.add(-4, 0, -4), center.add(-4, 0, -3),
+				center.add(3, 0, -4), center.add(4, 0, -4), center.add(4, 0, -3) };
 		for(int i = 0; i < shelvesPos.length; i++) {
 			BlockState shelvesState = world.getBlockState(shelvesPos[i]);
 			if (shelvesState.getBlock() != Blocks.BOOKSHELF) return false;
 		}
 		
-		BlockPos[] pedestalPos = new BlockPos[] { ritualCenter.add(4, 0, 0), ritualCenter.add(-4, 0, 0),
-				ritualCenter.add(0, 0, 4), ritualCenter.add(0, 0, -4) };
+		BlockPos[] pedestalPos = new BlockPos[] { center.add(4, 0, 0), center.add(-4, 0, 0),
+				center.add(0, 0, 4), center.add(0, 0, -4) };
 		for(int i = 0; i< pedestalPos.length; i++) {
 			BlockState pedestalState = world.getBlockState(pedestalPos[i]);
 			if (pedestalState.getBlock() != ForgeRegistries.BLOCKS.getValue(new ResourceLocation("mana-and-artifice", "pedestal"))) return false;
@@ -84,12 +86,12 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 	}
 	
 	@Override
-	protected int getApplicationTicks(ServerWorld world, BlockPos pos, IRitualRecipe recipe, NonNullList<ItemStack> reagents) {
+	protected int getApplicationTicks(IRitualContext context) {
 		return 10;
 	}
 	
 	@Override
-	protected boolean modifyRitualReagentsAndPatterns(ItemStack conditionStack, NonNullList<ResourceLocation> patternIDs, NonNullList<RitualBlockPos> reagents) {
+	protected boolean modifyRitualReagentsAndPatterns(ItemStack conditionStack, IRitualContext context) {
 		if (!(conditionStack.getItem() instanceof ArmorItem) || !Augmentation.isAugmented(conditionStack)) {
 			return false;
 		}
@@ -99,29 +101,27 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 			return false;
 		}
 			
-		this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), reagents, getTargetArmor(conditionStack));
+		/*this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), reagents, getTargetArmor(conditionStack));
 		if (level >= 2) this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-fabric"), reagents, getFabricReagents(conditionStack));
 		if (level >= 1 && level < 4) this.replaceReagents(new ResourceLocation("arcaneimbuement:experience_bottle_1"), reagents, getExpBottle(conditionStack));
 		if (level >= 2) this.replaceReagents(new ResourceLocation("arcaneimbuement:experience_bottle_2"), reagents, getExpBottle(conditionStack));
 		if (level >= 3) this.replaceReagents(new ResourceLocation("arcaneimbuement:experience_bottle_3"), reagents, getExpBottle(conditionStack));
-		if (level >= 4) this.replaceReagents(new ResourceLocation("arcaneimbuement:experience_bottle_4"), reagents, getExpBottle(conditionStack));
+		if (level >= 4) this.replaceReagents(new ResourceLocation("arcaneimbuement:experience_bottle_4"), reagents, getExpBottle(conditionStack));*/
+/*		context.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), getTargetArmor(conditionStack));
+		if (level >= 2) context.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-fabric"), getFabricReagents(conditionStack));
+		if (level >= 1 && level < 4) context.replaceReagents(new ResourceLocation("arcaneimbuement:experience_bottle_1"), getExpBottle(conditionStack));
+		if (level >= 2) context.replaceReagents(new ResourceLocation("arcaneimbuement:experience_bottle_2"), getExpBottle(conditionStack));
+		if (level >= 3) context.replaceReagents(new ResourceLocation("arcaneimbuement:experience_bottle_3"), getExpBottle(conditionStack));
+		if (level >= 4) context.replaceReagents(new ResourceLocation("arcaneimbuement:experience_bottle_4"), getExpBottle(conditionStack));*/
+		RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:dynamic-armor"), getTargetArmor(conditionStack));
+		if (level >= 2) RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:dynamic-fabric"), getFabricReagents(conditionStack));
+		if (level >= 1 && level < 4) RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:experience_bottle_1"), getExpBottle(conditionStack));
+		if (level >= 2) RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:experience_bottle_2"), getExpBottle(conditionStack));
+		if (level >= 3) RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:experience_bottle_3"), getExpBottle(conditionStack));
+		if (level >= 4) RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:experience_bottle_4"), getExpBottle(conditionStack));
 		
 		this.setPedestalFocus(conditionStack);
 		return true;
-	}
-	
-	private void replaceReagents(ResourceLocation key, NonNullList<RitualBlockPos> reagents, NonNullList<ResourceLocation> replacements) {
-		if (reagents.size() == 0 || replacements.size() == 0) {
-			return;
-		}
-		int replaceIndex = 0;
-		for (RitualBlockPos reagent : reagents) {
-			if (reagent.getReagent() == null) continue;
-			if (reagent.getReagent().getResourceLocation().equals(key)) {
-				reagent.getReagent().setResourceLocation((ResourceLocation) replacements.get(replaceIndex));
-			} 
-		}
-		return;
 	}
 	
 	private NonNullList<ResourceLocation> getTargetArmor(ItemStack conditionStack) {
@@ -129,6 +129,7 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 		chosenItem.add(conditionStack.getItem().getRegistryName());
 		return chosenItem;
 	}
+	
 	private NonNullList<ResourceLocation> getFabricReagents(ItemStack conditionStack) {
 		NonNullList<ResourceLocation> possibleItems = NonNullList.create();
 		byte level = Augmentation.fromNBT(conditionStack.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG)).getLevel();
@@ -140,11 +141,13 @@ public class RitualEffectLevelUpArmor extends RitualEffect {
 		}
 		return possibleItems;
 	}
+	
 	private NonNullList<ResourceLocation> getExpBottle(ItemStack conditionStack) {
 		NonNullList<ResourceLocation> possibleItems = NonNullList.create();
 		possibleItems.add(new ResourceLocation("minecraft", "experience_bottle"));
 		return possibleItems;
 	}
+	
 	private void setPedestalFocus(ItemStack conditionStack) {
 		byte level = Augmentation.fromNBT(conditionStack.getOrCreateChildTag(Augmentation.AUGMENTATION_TAG)).getLevel();
 		if (level >= 4) this.pedestalFocus = new ResourceLocation("mana-and-artifice", "ritual_focus_greater");

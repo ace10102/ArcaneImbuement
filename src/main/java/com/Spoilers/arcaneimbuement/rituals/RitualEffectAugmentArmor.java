@@ -1,22 +1,19 @@
 package com.Spoilers.arcaneimbuement.rituals;
 
-import com.Spoilers.arcaneimbuement.Augmentation;
-import com.ma.api.recipes.IRitualRecipe;
-import com.ma.api.rituals.RitualBlockPos;
+import com.Spoilers.arcaneimbuement.augments.Augmentation;
+import com.ma.api.rituals.IRitualContext;
 import com.ma.api.rituals.RitualEffect;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.ItemStack;	
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
 public class RitualEffectAugmentArmor extends RitualEffect {
 	
@@ -25,12 +22,13 @@ public class RitualEffectAugmentArmor extends RitualEffect {
 	}
 
 	@Override
-	protected boolean applyRitualEffect(PlayerEntity ritualCaster, ServerWorld world, BlockPos ritualCenter, IRitualRecipe completedRecipe, NonNullList<ItemStack> reagentList) {
+	protected boolean applyRitualEffect(IRitualContext context) {
+		World world = context.getWorld();
+		BlockPos center = context.getCenter();
 		ItemStack targetItem = ItemStack.EMPTY;
-		for (ItemStack stack : reagentList) {
+		for (ItemStack stack : context.getCollectedReagents()) {
             if (!(stack.getItem() instanceof ArmorItem)) continue;
             targetItem = stack;
-            
             break;
         }
         if (targetItem == null) {
@@ -38,39 +36,33 @@ public class RitualEffectAugmentArmor extends RitualEffect {
         }
         ItemStack augmentedArmor = new ItemStack(targetItem.getItem());
         Augmentation.augment(augmentedArmor, new Augmentation());
-        ItemEntity item = new ItemEntity((World)world, (double)((float)ritualCenter.up().getX() + 0.5f),
-        		(double)((float)ritualCenter.up().getY() + 0.5f), (double)((float)ritualCenter.up().getZ() + 0.5f), augmentedArmor);
+        ItemEntity item = new ItemEntity((World)world, (double)((float)center.up().getX() + 0.5f),
+        		(double)((float)center.up().getY() + 0.5f), (double)((float)center.up().getZ() + 0.5f), augmentedArmor);
         world.addEntity((Entity)item);
 		return true;
 	}
 
 	@Override
-	protected int getApplicationTicks(ServerWorld var1, BlockPos var2, IRitualRecipe var3, NonNullList<ItemStack> var4) {
+	protected int getApplicationTicks(IRitualContext context) {
 		return 10;
 	}
 	@Override
-    protected boolean modifyRitualReagentsAndPatterns(ItemStack conditionStack, NonNullList<ResourceLocation> patternIDs, NonNullList<RitualBlockPos> reagents) {
+    protected boolean modifyRitualReagentsAndPatterns(ItemStack conditionStack, IRitualContext context) {
         if(!(conditionStack.getItem() instanceof ArmorItem)) {
         	return false;
         }
-        this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), reagents, getTargetArmor(conditionStack));
+        RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:dynamic-armor"), getTargetArmor(conditionStack));
+        RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:dynamic-fabric"), getFabricReagents(conditionStack));
+        RitualUtils.replaceReagents(context, new ResourceLocation("arcaneimbuement:dynamic-focus"), getFocusReagents(conditionStack));
+        /*context.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), getTargetArmor(conditionStack));
+        context.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-fabric"), getFabricReagents(conditionStack));
+        context.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-focus"), getFocusReagents(conditionStack));*/
+        /*this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-armor"), reagents, getTargetArmor(conditionStack));
         this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-fabric"), reagents, getFabricReagents(conditionStack));
-        this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-focus"), reagents, getFocusReagents(conditionStack));
+        this.replaceReagents(new ResourceLocation("arcaneimbuement:dynamic-focus"), reagents, getFocusReagents(conditionStack));*/
         return true;
     }
 
-    private void replaceReagents(ResourceLocation key, NonNullList<RitualBlockPos> reagents, NonNullList<ResourceLocation> replacements) {
-        if (reagents.size() == 0 || replacements.size() == 0) {
-            return;
-        }
-        for (RitualBlockPos reagent : reagents) {
-        	if (reagent.getReagent() == null) continue;
-            if (reagent.getReagent().getResourceLocation().compareTo(key) == 0) {
-            	reagent.getReagent().setResourceLocation((ResourceLocation)replacements.get(0));
-            }
-        }
-        return;
-    }
     private NonNullList<ResourceLocation> getTargetArmor(ItemStack conditionStack) {
     	NonNullList<ResourceLocation> chosenItem = NonNullList.create();
     	chosenItem.add(conditionStack.getItem().getRegistryName());

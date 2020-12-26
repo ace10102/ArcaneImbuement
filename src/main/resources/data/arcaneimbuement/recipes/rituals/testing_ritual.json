@@ -1,0 +1,44 @@
+{
+	"type": "mana-and-artifice:ritual",
+	"tier": 1,
+	"pattern":
+	[
+		[ 0,-1, 0 ],
+		[ 0, 1, 0 ],
+		[-1, 0,-1 ]
+	],
+	"displayPattern":
+	[
+		[ 0,-1, 0 ],
+		[ 0, 1, 0 ],
+		[-1, 0,-1 ]
+	],
+	"reagents":
+	[
+		"   ",
+		" A ",
+		"   "
+	],
+	"keys":
+	{
+		"A":
+		{
+			"item": "minecraft:diamond_chestplate",
+			"optional": false,
+			"consume": true,
+			"is_dynamic": true,
+			"dynamic_source": true
+		}
+	},
+	"manaweave":
+	[
+	],
+	"parameters":
+	{
+		"innerColor": "0x0032FF",
+		"outerColor": "0x0096FF",
+		"displayIndexes": false,
+		"kittable": false,
+		"beamColor": "0x16E1E1"
+	}
+}
